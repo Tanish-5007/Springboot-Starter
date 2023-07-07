@@ -19,11 +19,22 @@ public class PokemonController {
     @Autowired
     PokemonServiceImpl pokemonService;
 
+    @GetMapping("/get")
+    public ResponseEntity<List<PokemonDto>> getPokemon(){
+        return new ResponseEntity<>(pokemonService.getPokemon(), HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping("/get/{id}")
+    public ResponseEntity<PokemonDto> getPokemonById(@PathVariable("id") int id){
+        return ResponseEntity.ok(pokemonService.getPokemonById(id));
+    }
+
     @PostMapping("/pokemon/create")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<PokemonDto> createPokemon(@RequestBody PokemonDto pokemonDto){
         return new ResponseEntity<>(pokemonService.createPokemon(pokemonDto), HttpStatus.CREATED);
     }
+
 
 
 
