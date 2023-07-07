@@ -26,22 +26,6 @@ public class PokemonServiceImpl implements PokemonService{
     }
 
     @Override
-    public PokemonDto createPokemon(PokemonDto pokemonDto) {
-        Pokemon pokemon = new Pokemon();
-        pokemon.setId(pokemonDto.getId());
-        pokemon.setName(pokemonDto.getName());
-        pokemon.setType(pokemonDto.getType());
-
-        Pokemon newPokemon = pokemonRepository.save(pokemon);
-
-        PokemonDto pokemonResponse = new PokemonDto();
-        pokemonResponse.setId(newPokemon.getId());
-        pokemonResponse.setName(newPokemon.getName());
-        pokemonResponse.setType(newPokemon.getType());
-        return pokemonResponse;
-    }
-
-    @Override
     public List<PokemonDto> getPokemon() {
 //        List<Pokemon> pokemon = pokemonRepository.findAll();
 //        List<PokemonDto> list = pokemon.stream().map(pokemon1 -> mapToDto(pokemon1)).collect(Collectors.toList());
@@ -61,6 +45,42 @@ public class PokemonServiceImpl implements PokemonService{
         Pokemon newPokemon = pokemonRepository.findById(id).orElseThrow(() -> new PokemonNotFoundException("Pokemon could not be found"));
 
         return mapToDto(newPokemon);
+    }
+
+    @Override
+    public PokemonDto createPokemon(PokemonDto pokemonDto) {
+        Pokemon pokemon = new Pokemon();
+        pokemon.setId(pokemonDto.getId());
+        pokemon.setName(pokemonDto.getName());
+        pokemon.setType(pokemonDto.getType());
+
+        Pokemon newPokemon = pokemonRepository.save(pokemon);
+
+        PokemonDto pokemonResponse = new PokemonDto();
+        pokemonResponse.setId(newPokemon.getId());
+        pokemonResponse.setName(newPokemon.getName());
+        pokemonResponse.setType(newPokemon.getType());
+        return pokemonResponse;
+    }
+
+    @Override
+    public PokemonDto updatePokemon(PokemonDto pokemonDto, int id) {
+        Pokemon newPokemon = pokemonRepository.findById(id).orElseThrow(() -> new PokemonNotFoundException("Pokemon could not be updated"));
+
+        newPokemon.setName(pokemonDto.getName());
+        newPokemon.setType(pokemonDto.getType());
+
+        Pokemon updatedPokemon = pokemonRepository.save(newPokemon);
+
+        return mapToDto(updatedPokemon);
+    }
+
+    @Override
+    public void deletePokemon(int id) {
+
+        Pokemon pokemon = pokemonRepository.findById(id).orElseThrow(() -> new PokemonNotFoundException("Pokemon could not be Deleted"));
+
+        pokemonRepository.deleteById(id);
     }
 
 
