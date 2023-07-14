@@ -1,6 +1,7 @@
 package com.rungroop.web.service;
 
 import com.rungroop.web.dto.PokemonDto;
+import com.rungroop.web.dto.PokemonResponse;
 
 import java.util.List;
 
@@ -8,7 +9,7 @@ public interface PokemonService {
 
     PokemonDto createPokemon(PokemonDto pokemonDto);
 
-    List<PokemonDto> getPokemon();
+    PokemonResponse getPokemon(int pageNo, int pageSize);
 
     PokemonDto getPokemonById(int id);
 

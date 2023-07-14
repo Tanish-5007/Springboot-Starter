@@ -1,6 +1,7 @@
 package com.rungroop.web.controlllers;
 
 import com.rungroop.web.dto.PokemonDto;
+import com.rungroop.web.dto.PokemonResponse;
 import com.rungroop.web.model.Pokemon;
 import com.rungroop.web.service.impl.PokemonServiceImpl;
 import net.bytebuddy.implementation.auxiliary.AuxiliaryType;
@@ -13,15 +14,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/pokemon")
 public class PokemonController {
 
     @Autowired
     PokemonServiceImpl pokemonService;
 
     @GetMapping("/get")
-    public ResponseEntity<List<PokemonDto>> getPokemon(){
-        return new ResponseEntity<>(pokemonService.getPokemon(), HttpStatus.ACCEPTED);
+    public ResponseEntity<PokemonResponse> getPokemon(
+            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize
+            ){
+
+        return new ResponseEntity<>(pokemonService.getPokemon(pageNo, pageSize), HttpStatus.OK);
     }
 
     @GetMapping("/get/{id}")

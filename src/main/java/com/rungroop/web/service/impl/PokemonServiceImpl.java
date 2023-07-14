@@ -2,13 +2,16 @@ package com.rungroop.web.service.impl;
 
 
 import com.rungroop.web.dto.PokemonDto;
+import com.rungroop.web.dto.PokemonResponse;
 import com.rungroop.web.exceptions.PokemonNotFoundException;
 import com.rungroop.web.model.Pokemon;
 import com.rungroop.web.repository.PokemonRepository;
 import com.rungroop.web.service.PokemonService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -26,18 +29,29 @@ public class PokemonServiceImpl implements PokemonService{
     }
 
     @Override
-    public List<PokemonDto> getPokemon() {
-//        List<Pokemon> pokemon = pokemonRepository.findAll();
-//        List<PokemonDto> list = pokemon.stream().map(pokemon1 -> mapToDto(pokemon1)).collect(Collectors.toList());
-//        return list;
-        List<Pokemon> pokemonList = pokemonRepository.findAll();
-        List<PokemonDto> pokemonDtoList = new ArrayList<>();
+    public PokemonResponse getPokemon(int pageNo, int pageSize) {
 
-        for (Pokemon pokemon : pokemonList) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<Pokemon> pokemonList = pokemonRepository.findAll(pageable);
+
+        List<Pokemon> listOfPokemon = pokemonList.getContent();
+
+        List<PokemonDto> pokemonDtoList = new ArrayList<>();
+        for (Pokemon pokemon: listOfPokemon) {
             PokemonDto pokemonDto = mapToDto(pokemon);
             pokemonDtoList.add(pokemonDto);
         }
-        return pokemonDtoList;
+//        List<PokemonDto> pokemonDtoList = pokemon.stream().map(pokemon1 -> mapToDto(pokemon1)).collect(Collectors.toList());
+//        return pokemonDtoList;
+        PokemonResponse pokemonResponse = new PokemonResponse();
+        pokemonResponse.setContent(pokemonDtoList);
+        pokemonResponse.setPageNo(pokemonList.getNumber());
+        pokemonResponse.setPageSize(pokemonList.getSize());
+        pokemonResponse.setTotalElement(pokemonList.getTotalElements());
+        pokemonResponse.setTotalPages(pokemonList.getTotalPages());
+        pokemonResponse.setLast(pokemonList.isLast());
+
+        return pokemonResponse;
     }
 
     @Override
