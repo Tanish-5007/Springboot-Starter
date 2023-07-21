@@ -23,7 +23,7 @@ public class PokemonController {
     @GetMapping("/get")
     public ResponseEntity<PokemonResponse> getPokemon(
             @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize
+            @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize
             ){
 
         return new ResponseEntity<>(pokemonService.getPokemon(pageNo, pageSize), HttpStatus.OK);
@@ -34,18 +34,18 @@ public class PokemonController {
         return ResponseEntity.ok(pokemonService.getPokemonById(id));
     }
 
-    @PostMapping("/pokemon/create")
+    @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<PokemonDto> createPokemon(@RequestBody PokemonDto pokemonDto){
         return new ResponseEntity<>(pokemonService.createPokemon(pokemonDto), HttpStatus.CREATED);
     }
 
-    @PutMapping("/get/{id}/update")
+    @PutMapping("/{id}/update")
     public ResponseEntity<PokemonDto> updatePokemonById(@RequestBody PokemonDto pokemonDto, @PathVariable("id") int id){
         return ResponseEntity.ok(pokemonService.updatePokemon(pokemonDto, id));
     }
 
-    @DeleteMapping("/get/{id}/delete")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deletePokemonById(@PathVariable("id") int id){
         pokemonService.deletePokemon(id);
         return new ResponseEntity<>("Pokemon Deleted", HttpStatus.OK);
